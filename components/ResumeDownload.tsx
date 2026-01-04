@@ -43,7 +43,7 @@ export default function ResumeDownload() {
             </a>
             
             <p className="text-sm text-foreground/50 mt-6">
-              PDF Format • Updated December 2025
+              PDF Format • Updated January 2026
             </p>
           </div>
         </motion.div>
