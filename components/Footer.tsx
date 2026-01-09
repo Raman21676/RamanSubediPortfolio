@@ -13,7 +13,7 @@ export default function Footer() {
     setSecretInput(val);
     if (val === "10737412") {
       window.open(
-        "https://drive.google.com/file/d/1tQaQgxkQ_AazAqGAuLsPmvijIev1uIzN/view?usp=share_link",
+        "https://drive.google.com/file/d/1nC5dcDjrJU_cCEu6EQLSnLujr3w_GKRH/view?usp=share_link",
         "_blank"
       );
       setSecretInput("");
