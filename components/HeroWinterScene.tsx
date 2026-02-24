@@ -128,7 +128,7 @@ export default function HeroWinterScene() {
       {/* Background Image - Norwegian Landscape */}
       <div className="absolute inset-0">
         <Image
-          src="/image1.png"
+          src="/image1.png?v=3"
           alt="Norwegian winter landscape with Aurora Borealis"
           fill
           priority
@@ -167,7 +167,7 @@ export default function HeroWinterScene() {
       {/* Main Scene - Raman with Dogs */}
       <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-4xl h-[70vh] md:h-[80vh]">
         <Image
-          src="/image2.png"
+          src="/image2.png?v=3"
           alt="Raman Subedi with German Shepherd and Husky by the campfire"
           fill
           priority
