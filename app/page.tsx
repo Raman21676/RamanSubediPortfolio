@@ -1,5 +1,5 @@
 import Navigation from "@/components/Navigation";
-import HeroWinterScene from "@/components/HeroWinterScene";
+import HeroNorwegianScene from "@/components/HeroNorwegianScene";
 import dynamic from 'next/dynamic';
 
 // Lazy load below-the-fold components for better performance
@@ -23,7 +23,7 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       <Navigation />
-      <HeroWinterScene />
+      <HeroNorwegianScene />
       <div className="bg-[#0f172a]">
         <About />
         <Projects />

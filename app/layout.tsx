@@ -142,8 +142,9 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://api.emailjs.com" />
         
         {/* Preload critical images */}
-        <link rel="preload" href="/image1.png?v=3" as="image" type="image/png" />
-        <link rel="preload" href="/image2.png?v=3" as="image" type="image/png" />
+        <link rel="preload" href="/Raman-background.png" as="image" type="image/png" />
+        <link rel="preload" href="/Raman-campfire.png" as="image" type="image/png" />
+        <link rel="preload" href="/Raman-2dogs.png" as="image" type="image/png" />
         
         {/* Structured Data */}
         <script

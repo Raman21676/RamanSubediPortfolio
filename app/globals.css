@@ -142,3 +142,59 @@
 ::selection {
   @apply bg-primary-500/30 text-foreground;
 }
+
+/* Norwegian Winter Scene Styles */
+@keyframes aurora-move {
+  0%, 100% {
+    transform: translateX(-10%) scaleY(1);
+  }
+  50% {
+    transform: translateX(10%) scaleY(1.2);
+  }
+}
+
+@keyframes snowfall {
+  0% {
+    transform: translateY(-10px) translateX(0);
+  }
+  100% {
+    transform: translateY(100vh) translateX(20px);
+  }
+}
+
+@keyframes fire-flicker {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  25% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(0.95);
+  }
+  75% {
+    opacity: 0.9;
+    transform: scale(1.02);
+  }
+}
+
+/* Smooth gradient animation for text */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 5s ease infinite;
+}
