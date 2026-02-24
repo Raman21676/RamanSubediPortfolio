@@ -1,7 +1,39 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ExternalLink, Github, Code2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+
+// Custom hook for intersection observer
+function useInView(options = {}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      setIsInView(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px', ...options }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  return { ref, isInView };
+}
 
 export default function Projects() {
   const projects = [
@@ -39,83 +71,111 @@ export default function Projects() {
     },
   ];
 
+  const { ref: headerRef, isInView: headerInView } = useInView();
+
   return (
     <section id="projects" className="min-h-screen py-20 px-6">
       <div className="max-w-7xl mx-auto">
-        <motion.div
-          initial={{ y: 30, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
+        {/* Header */}
+        <div 
+          ref={headerRef}
+          className={`text-center mb-16 transition-all duration-600 ease-out ${
+            headerInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+          }`}
         >
-          <h2 className="text-5xl md:text-6xl font-bold mb-6 text-gradient">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-gradient">
             Featured Projects
           </h2>
-          <p className="text-xl text-foreground/70 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-foreground/70 max-w-3xl mx-auto">
             A showcase of my work in AI, machine learning, and DevOps—combining 
             technical expertise with practical problem-solving.
           </p>
-        </motion.div>
+        </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-8">
           {projects.map((project, index) => (
-            <motion.div
-              key={project.title}
-              initial={{ y: 30, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.1 * index }}
-              viewport={{ once: true }}
-              whileHover={{ y: -8, transition: { duration: 0.2 } }}
-              className="group glass glow-border rounded-3xl p-8 hover:bg-white/10 transition-all duration-300 relative overflow-hidden cursor-pointer"
-            >
-              {/* Gradient accent */}
-              <div className={`absolute top-0 left-0 right-0 h-2 bg-gradient-to-r ${project.gradient}`} />
-              
-              {/* Hover gradient overlay */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
-              
-              <div className="relative z-10">
-                <div className="flex justify-between items-start mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-lg bg-gradient-to-br ${project.gradient}`}>
-                      <project.icon className="w-5 h-5" />
-                    </div>
-                    <span className="text-sm text-foreground/50">{project.year}</span>
-                  </div>
-                  <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <button className="p-2 rounded-lg glass hover:bg-white/10 transition-colors">
-                      <Github className="w-5 h-5" />
-                    </button>
-                    <button className="p-2 rounded-lg glass hover:bg-white/10 transition-colors">
-                      <ExternalLink className="w-5 h-5" />
-                    </button>
-                  </div>
-                </div>
-
-                <h3 className="text-2xl font-bold mb-3 group-hover:text-gradient transition-all">
-                  {project.title}
-                </h3>
-                
-                <p className="text-foreground/70 mb-6 leading-relaxed">
-                  {project.description}
-                </p>
-
-                <div className="flex flex-wrap gap-2">
-                  {project.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-3 py-1 rounded-full bg-white/5 text-sm text-foreground/80 border border-white/10 hover:border-white/30 transition-colors"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
+            <ProjectCard key={project.title} project={project} index={index} />
           ))}
         </div>
       </div>
     </section>
+  );
+}
+
+function ProjectCard({ 
+  project, 
+  index 
+}: { 
+  project: {
+    title: string;
+    description: string;
+    tags: string[];
+    gradient: string;
+    year: string;
+    icon: typeof Code2;
+  }; 
+  index: number;
+}) {
+  const { ref, isInView } = useInView();
+  const Icon = project.icon;
+
+  return (
+    <div
+      ref={ref}
+      className={`group glass glow-border rounded-2xl md:rounded-3xl p-6 md:p-8 hover:bg-white/10 transition-all duration-300 relative overflow-hidden cursor-pointer ${
+        isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+      }`}
+      style={{ transitionDelay: `${index * 100}ms` }}
+    >
+      {/* Gradient accent */}
+      <div className={`absolute top-0 left-0 right-0 h-1.5 md:h-2 bg-gradient-to-r ${project.gradient}`} />
+      
+      {/* Hover gradient overlay - simplified for performance */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
+      
+      <div className="relative z-10">
+        <div className="flex justify-between items-start mb-4">
+          <div className="flex items-center gap-3">
+            <div className={`p-2 rounded-lg bg-gradient-to-br ${project.gradient}`}>
+              <Icon className="w-4 h-4 md:w-5 md:h-5" />
+            </div>
+            <span className="text-sm text-foreground/50">{project.year}</span>
+          </div>
+          <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <button 
+              className="p-2 rounded-lg glass hover:bg-white/10 transition-colors"
+              aria-label="View GitHub"
+            >
+              <Github className="w-4 h-4 md:w-5 md:h-5" />
+            </button>
+            <button 
+              className="p-2 rounded-lg glass hover:bg-white/10 transition-colors"
+              aria-label="View Project"
+            >
+              <ExternalLink className="w-4 h-4 md:w-5 md:h-5" />
+            </button>
+          </div>
+        </div>
+
+        <h3 className="text-xl md:text-2xl font-bold mb-3 group-hover:text-gradient transition-colors duration-300">
+          {project.title}
+        </h3>
+        
+        <p className="text-foreground/70 mb-6 leading-relaxed text-sm md:text-base">
+          {project.description}
+        </p>
+
+        <div className="flex flex-wrap gap-2">
+          {project.tags.map((tag) => (
+            <span
+              key={tag}
+              className="px-2.5 md:px-3 py-1 rounded-full bg-white/5 text-xs md:text-sm text-foreground/80 border border-white/10 hover:border-white/30 transition-colors duration-200"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }

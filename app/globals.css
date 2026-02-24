@@ -1,33 +1,144 @@
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Font face declarations for self-hosted fonts (recommended for performance) */
+/* If using Google Fonts, use next/font instead for better performance */
+
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Prevent layout shift from scrollbar */
+    scrollbar-gutter: stable;
+  }
+  
   body {
     @apply bg-background text-foreground font-sans;
+    /* Optimize text rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Reduce motion for users who prefer it */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
 @layer utilities {
+  /* Optimized glass effect - less GPU intensive */
   .glass {
-    @apply bg-white/5 backdrop-blur-lg border border-white/10;
+    @apply bg-white/5 border border-white/10;
+    /* Use simpler blur on mobile */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 
+  /* GPU-optimized glass for desktop */
+  @media (min-width: 768px) {
+    .glass {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+  }
+
+  /* Simplified glow border - uses transform instead of expensive shadow animation */
   .glow-border {
-    @apply border border-primary-500/50 shadow-[0_0_20px_rgba(168,85,247,0.3)];
+    @apply border border-primary-500/30;
+    transition: box-shadow 0.3s ease;
   }
 
+  .glow-border:hover {
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+  }
+
+  /* Text gradient with GPU optimization */
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-400 to-accent-400;
+    /* Prevent layout shift */
+    display: inline-block;
   }
 
+  /* Optimized hover lift - uses transform for 60fps */
   .hover-lift {
-    @apply transition-transform duration-300 hover:-translate-y-2;
+    transition: transform 0.2s ease-out;
+    will-change: transform;
   }
 
-  .smooth-shadow {
-    @apply shadow-xl shadow-primary-500/20;
+  .hover-lift:hover {
+    transform: translateY(-4px);
   }
+
+  /* Simplified smooth shadow */
+  .smooth-shadow {
+    box-shadow: 0 4px 20px rgba(168, 85, 247, 0.1);
+  }
+
+  /* GPU-accelerated animations */
+  .gpu-accelerate {
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  /* Static background gradient orbs - no animation */
+  .gradient-orb {
+    @apply absolute rounded-full blur-3xl opacity-20 pointer-events-none;
+  }
+
+  .gradient-orb-primary {
+    @apply gradient-orb bg-gradient-to-br from-primary-500/30 to-transparent;
+  }
+
+  .gradient-orb-accent {
+    @apply gradient-orb bg-gradient-to-tl from-accent-500/30 to-transparent;
+  }
+}
+
+/* Critical CSS optimizations */
+@layer components {
+  /* Container queries for better responsive performance */
+  .container-responsive {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Optimized section spacing */
+  .section-spacing {
+    @apply py-16 md:py-20 lg:py-24;
+  }
+
+  /* Lazy loaded images placeholder */
+  .image-placeholder {
+    @apply bg-gradient-to-br from-white/5 to-white/10 animate-pulse;
+  }
+}
+
+/* Custom scrollbar - webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-background;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-white/20 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-white/30;
+}
+
+/* Selection color */
+::selection {
+  @apply bg-primary-500/30 text-foreground;
 }

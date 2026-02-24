@@ -1,9 +1,40 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Mail, Linkedin, Github, Send, MessageCircle, CheckCircle, AlertCircle } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import emailjs from "@emailjs/browser";
+
+// Custom hook for intersection observer
+function useInView(options = {}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      setIsInView(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px', ...options }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  return { ref, isInView };
+}
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -16,6 +47,10 @@ export default function Contact() {
     type: "success" | "error" | null;
     message: string;
   }>({ type: null, message: "" });
+
+  const { ref: headerRef, isInView: headerInView } = useInView();
+  const { ref: formRef, isInView: formInView } = useInView();
+  const { ref: socialRef, isInView: socialInView } = useInView();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,14 +82,6 @@ export default function Contact() {
       setFormData({ name: "", email: "", message: "" });
     } catch (error) {
       console.error("Error sending email:", error);
-      // Log specific error details if available since the user cannot see server logs easily
-      if (error instanceof Error) {
-        console.error("Error name:", error.name);
-        console.error("Error message:", error.message);
-      } else {
-        console.error("Full error object:", JSON.stringify(error));
-      }
-
       setSubmitStatus({
         type: "error",
         message: "Oops! Something went wrong. Please try again or contact me directly via email (ai@ramansubedi.com).",
@@ -88,32 +115,31 @@ export default function Contact() {
   return (
     <section id="contact" className="min-h-screen py-20 px-6">
       <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ y: 30, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
+        {/* Header */}
+        <div 
+          ref={headerRef}
+          className={`text-center mb-16 transition-all duration-600 ease-out ${
+            headerInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+          }`}
         >
-          <h2 className="text-5xl md:text-6xl font-bold mb-6 text-gradient">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-gradient">
             Let&apos;s Connect
           </h2>
-          <p className="text-xl text-foreground/70 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-foreground/70 max-w-3xl mx-auto">
             I&apos;m always open to discussing new opportunities, collaborations, 
             or just having a chat about AI and technology.
           </p>
-        </motion.div>
+        </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-8">
           {/* Contact Form */}
-          <motion.div
-            initial={{ x: -30, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="glass glow-border rounded-3xl p-8"
+          <div 
+            ref={formRef}
+            className={`glass glow-border rounded-2xl md:rounded-3xl p-6 md:p-8 transition-all duration-600 delay-100 ease-out ${
+              formInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-6'
+            }`}
           >
-            <h3 className="text-2xl font-bold mb-6">Send a Message</h3>
+            <h3 className="text-xl md:text-2xl font-bold mb-6">Send a Message</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium mb-2">
@@ -124,7 +150,7 @@ export default function Contact() {
                   id="name"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl glass border border-white/10 focus:border-primary-500 focus:outline-none transition-colors"
+                  className="w-full px-4 py-3 rounded-xl glass border border-white/10 focus:border-primary-500 focus:outline-none transition-colors bg-transparent"
                   required
                 />
               </div>
@@ -137,7 +163,7 @@ export default function Contact() {
                   id="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl glass border border-white/10 focus:border-primary-500 focus:outline-none transition-colors"
+                  className="w-full px-4 py-3 rounded-xl glass border border-white/10 focus:border-primary-500 focus:outline-none transition-colors bg-transparent"
                   required
                 />
               </div>
@@ -150,7 +176,7 @@ export default function Contact() {
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   rows={5}
-                  className="w-full px-4 py-3 rounded-xl glass border border-white/10 focus:border-primary-500 focus:outline-none transition-colors resize-none"
+                  className="w-full px-4 py-3 rounded-xl glass border border-white/10 focus:border-primary-500 focus:outline-none transition-colors resize-none bg-transparent"
                   required
                 />
               </div>
@@ -174,10 +200,8 @@ export default function Contact() {
 
               {/* Status Messages */}
               {submitStatus.type && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`p-4 rounded-xl flex items-start gap-3 ${
+                <div
+                  className={`p-4 rounded-xl flex items-start gap-3 animate-fadeIn ${
                     submitStatus.type === "success"
                       ? "bg-green-500/10 border border-green-500/20"
                       : "bg-red-500/10 border border-red-500/20"
@@ -195,21 +219,20 @@ export default function Contact() {
                   >
                     {submitStatus.message}
                   </p>
-                </motion.div>
+                </div>
               )}
             </form>
-          </motion.div>
+          </div>
 
           {/* Social Links */}
-          <motion.div
-            initial={{ x: 30, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="space-y-6"
+          <div 
+            ref={socialRef}
+            className={`space-y-6 transition-all duration-600 delay-200 ease-out ${
+              socialInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-6'
+            }`}
           >
-            <div className="glass glow-border rounded-3xl p-8">
-              <h3 className="text-2xl font-bold mb-6">Connect With Me</h3>
+            <div className="glass glow-border rounded-2xl md:rounded-3xl p-6 md:p-8">
+              <h3 className="text-xl md:text-2xl font-bold mb-6">Connect With Me</h3>
               <div className="space-y-4">
                 {socialLinks.map((link) => (
                   <a
@@ -220,9 +243,9 @@ export default function Contact() {
                     className="flex items-center gap-4 p-4 rounded-xl glass hover:bg-white/10 transition-all duration-300 group"
                   >
                     <div className={`p-3 rounded-lg bg-gradient-to-br ${link.color}`}>
-                      <link.icon className="w-6 h-6" />
+                      <link.icon className="w-5 h-5 md:w-6 md:h-6" />
                     </div>
-                    <span className="font-medium group-hover:text-gradient transition-all">
+                    <span className="font-medium group-hover:text-gradient transition-colors duration-300">
                       {link.name}
                     </span>
                   </a>
@@ -235,18 +258,18 @@ export default function Contact() {
                   className="flex items-center gap-4 p-4 rounded-xl glass hover:bg-white/10 transition-all duration-300 group"
                 >
                   <div className="p-3 rounded-lg bg-gradient-to-br from-green-500 to-emerald-600">
-                    <MessageCircle className="w-6 h-6" />
+                    <MessageCircle className="w-5 h-5 md:w-6 md:h-6" />
                   </div>
-                  <span className="font-medium group-hover:text-gradient transition-all">
+                  <span className="font-medium group-hover:text-gradient transition-colors duration-300">
                     Chat on WhatsApp
                   </span>
                 </a>
               </div>
             </div>
 
-            <div className="glass glow-border rounded-3xl p-8">
-              <h3 className="text-xl font-bold mb-4">Quick Info</h3>
-              <div className="space-y-3 text-foreground/70">
+            <div className="glass glow-border rounded-2xl md:rounded-3xl p-6 md:p-8">
+              <h3 className="text-lg md:text-xl font-bold mb-4">Quick Info</h3>
+              <div className="space-y-3 text-foreground/70 text-sm md:text-base">
                 <p>📍 Kathmandu, Nepal</p>
                 <p>🎓 BIT Graduate, Tribhuvan University</p>
                 <p>💼 Senior AI/ ML & DevOps Engineer</p>
@@ -255,7 +278,7 @@ export default function Contact() {
                 <p>📞 +977 9824370085</p>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

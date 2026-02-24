@@ -1,5 +1,15 @@
 import type { Metadata } from "next";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+
+// Optimize font loading with next/font
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  display: "swap",
+  variable: "--font-plus-jakarta-sans",
+  preload: true,
+});
 
 export const metadata: Metadata = {
   title: 'Raman Subedi | AI Engineer & DevOps Specialist | Python Developer Nepal',
@@ -8,44 +18,12 @@ export const metadata: Metadata = {
     'Raman Subedi',
     'AI Engineer Nepal',
     'AI Engineer',
-    'Artificial Intelligence',
-    'AI',
-    'AI Engineer',
-    'AI & ML',
-    'Python Developer',
-    'Python',
-    'pyhton',
-    'Python Developer',
     'Machine Learning Engineer',
-    'Machine Learning',
-    'ML',
-    'Machine Learning Engineer',
-    'machine learning engineer',
-    'Best',
-    'Best Developer',
-    'Best AI Engineer',
-    'Best DevOps Engineer',
-    'best deveops engineer',
-    'best ai engineer',
-    'best developer',
-    'best ai engineer nepal',
-    'best devops engineer nepal',
-    'best developer nepal',
-    'best ai engineer nepal',
-    'best devops engineer nepal',
-    'best developer nepal',
     'DevOps Engineer',
-    'Data Analytics',
-    'Data Science',
-    'Data Science Engineer',
-    'Backend Developer',
-    'Docker',
-    'CI/CD',
-    'Biratnagar Nepal',
-    'Artificial Intelligence',
-    'Scikit-learn',
-    'Jenkins',
-    'Neural Networks'
+    'Python Developer',
+    'Biratnagar',
+    'Kathmandu',
+    'Nepal',
   ],
   authors: [{ name: 'Raman Subedi', url: 'https://www.ramansubedi.com' }],
   creator: 'Raman Subedi',
@@ -87,11 +65,17 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  verification: {
-    google: 'your-google-verification-code', // You'll add this later from Google Search Console
-  },
   icons: {
-    icon: '/Raman-Subedi-AI-Engineer.jpg',
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/Raman-Subedi-AI-Engineer.jpg', type: 'image/jpeg' },
+    ],
+    apple: '/Raman-Subedi-AI-Engineer.jpg',
+  },
+  manifest: '/manifest.json',
+  other: {
+    'theme-color': '#0f172a',
+    'msapplication-TileColor': '#0f172a',
   },
 };
 
@@ -151,40 +135,48 @@ export default function RootLayout({
       'Data Engineering',
     ],
     knowsLanguage: [
-      {
-        '@type': 'Language',
-        name: 'English',
-        alternateName: 'en',
-      },
-      {
-        '@type': 'Language',
-        name: 'Nepali',
-        alternateName: 'ne',
-      },
-      {
-        '@type': 'Language',
-        name: 'German',
-        alternateName: 'de',
-      },
-      {
-        '@type': 'Language',
-        name: 'Hindi',
-        alternateName: 'hi',
-      },
+      { '@type': 'Language', name: 'English', alternateName: 'en' },
+      { '@type': 'Language', name: 'Nepali', alternateName: 'ne' },
+      { '@type': 'Language', name: 'German', alternateName: 'de' },
+      { '@type': 'Language', name: 'Hindi', alternateName: 'hi' },
     ],
   };
 
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className={`${plusJakartaSans.variable} scroll-smooth`}>
       <head>
+        {/* DNS Prefetch and Preconnect for external resources */}
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        
+        {/* Preconnect for EmailJS */}
+        <link rel="dns-prefetch" href="https://api.emailjs.com" />
+        
+        {/* Preload critical assets */}
+        <link rel="preload" href="/profile.png" as="image" type="image/png" />
+        
+        {/* Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
-        <link rel="canonical" href="https://www.ramansubedi.com" />
+        
+        {/* Resource hints */}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+        
+        {/* PWA tags */}
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Raman Subedi" />
+        
+        {/* Performance hints */}
+        <meta name="format-detection" content="telephone=no" />
       </head>
-      <body className="antialiased">
+      <body className={`${plusJakartaSans.className} antialiased`}>
         {children}
       </body>
     </html>

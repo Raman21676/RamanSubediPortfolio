@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://www.ramansubedi.com/sitemap.xml
+
+# Disallow admin or private routes (if any)
+# Disallow: /admin/
+# Disallow: /private/
