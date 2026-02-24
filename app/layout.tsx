@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     siteName: 'Raman Subedi Portfolio',
     images: [
       {
-        url: '/image2.png',
+        url: '/image2.png?v=3',
         width: 1024,
         height: 1536,
         alt: 'Raman Subedi - AI/ML & DevOps Engineer',
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Raman Subedi | AI/ML & DevOps Engineer',
     description: 'AI Engineer from Nepal specializing in Python, Machine Learning, and DevOps',
-    images: ['/image2.png'],
+    images: ['/image2.png?v=3'],
   },
   robots: {
     index: true,
@@ -89,7 +89,7 @@ export default function RootLayout({
     '@type': 'Person',
     name: 'Raman Subedi',
     url: 'https://www.ramansubedi.com',
-    image: 'https://www.ramansubedi.com/image2.png',
+    image: 'https://www.ramansubedi.com/image2.png?v=3',
     jobTitle: 'AI/ML & DevOps Engineer',
     description: 'AI Engineer and DevOps specialist from Nepal with expertise in Python, Machine Learning, and scalable systems',
     worksFor: {
@@ -142,8 +142,8 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://api.emailjs.com" />
         
         {/* Preload critical images */}
-        <link rel="preload" href="/image1.png" as="image" type="image/png" />
-        <link rel="preload" href="/image2.png" as="image" type="image/png" />
+        <link rel="preload" href="/image1.png?v=3" as="image" type="image/png" />
+        <link rel="preload" href="/image2.png?v=3" as="image" type="image/png" />
         
         {/* Structured Data */}
         <script
