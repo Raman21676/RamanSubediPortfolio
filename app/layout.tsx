@@ -41,9 +41,9 @@ export const metadata: Metadata = {
     siteName: 'Raman Subedi Portfolio',
     images: [
       {
-        url: '/og-image.jpg',
-        width: 1200,
-        height: 630,
+        url: '/image2.png',
+        width: 1024,
+        height: 1536,
         alt: 'Raman Subedi - AI/ML & DevOps Engineer',
       },
     ],
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Raman Subedi | AI/ML & DevOps Engineer',
     description: 'AI Engineer from Nepal specializing in Python, Machine Learning, and DevOps',
-    images: ['/og-image.jpg'],
+    images: ['/image2.png'],
   },
   robots: {
     index: true,
@@ -84,13 +84,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Structured Data for SEO
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'Person',
     name: 'Raman Subedi',
     url: 'https://www.ramansubedi.com',
-    image: 'https://www.ramansubedi.com/profile-photo.jpg',
+    image: 'https://www.ramansubedi.com/image2.png',
     jobTitle: 'AI/ML & DevOps Engineer',
     description: 'AI Engineer and DevOps specialist from Nepal with expertise in Python, Machine Learning, and scalable systems',
     worksFor: {
@@ -127,12 +126,6 @@ export default function RootLayout({
       'Docker',
       'CI/CD',
       'Backend Development',
-      'Linux System Administration',
-      'Git',
-      'Neural Networks',
-      'Scikit-learn',
-      'Jenkins',
-      'Data Engineering',
     ],
     knowsLanguage: [
       { '@type': 'Language', name: 'English', alternateName: 'en' },
@@ -145,17 +138,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${plusJakartaSans.variable} scroll-smooth`}>
       <head>
-        {/* DNS Prefetch and Preconnect for external resources */}
-        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
         {/* Preconnect for EmailJS */}
         <link rel="dns-prefetch" href="https://api.emailjs.com" />
         
-        {/* Preload critical assets */}
-        <link rel="preload" href="/profile.png" as="image" type="image/png" />
+        {/* Preload critical images */}
+        <link rel="preload" href="/image1.png" as="image" type="image/png" />
+        <link rel="preload" href="/image2.png" as="image" type="image/png" />
         
         {/* Structured Data */}
         <script
@@ -163,7 +151,6 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
         
-        {/* Resource hints */}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         
@@ -173,7 +160,6 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="Raman Subedi" />
         
-        {/* Performance hints */}
         <meta name="format-detection" content="telephone=no" />
       </head>
       <body className={`${plusJakartaSans.className} antialiased`}>
